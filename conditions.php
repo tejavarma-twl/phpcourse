@@ -1,4 +1,6 @@
 <?php
+
+echo "welcome to greatest numbet logic!"
 $a=8;
 $b=8;
 $c=8;

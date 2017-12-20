@@ -1,15 +1,19 @@
 <?php
 
-function findfactorial($num){
+function findfactorial($num)
+{
     $sample = [];
-    for($i=1;$i<=$num;$i++){
-        if($num%$i==0){
+    for($i=1;$i<=$num;$i++)
+    {
+        if($num%$i==0)
+        {
             array_push($sample,$i);
         }
     }
     return $fact;
 }
-function findcommonfactorial($num1,$num2){
+function findcommonfactorial($num1,$num2)
+{
     $factor1 = findfactorial($num1);
     $factor2 = findfactorial($num2);
      $factor3 = findfactorial($num3);

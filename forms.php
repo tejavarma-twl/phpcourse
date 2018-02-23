@@ -19,10 +19,6 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
     <img src="uploads/cheetah_snapshot.jpg" alt="" width="200">
 </body>
 </html>
-
-
-$f['dsfds']['fdgfd'];
-
 <?php
 $uploads_dir = './uploads';
 if(isset($_POST['username'])&&isset($_POST['password'])){
@@ -38,8 +34,6 @@ if(isset($_POST['username'])&&isset($_POST['password'])){
     echo "<br>";
     echo $_FILES['profile_pic']['size'];
     echo "<br>";
-
-
 
     echo move_uploaded_file($_FILES['profile_pic']['tmp_name'],"$uploads_dir/$filename");
     // echo move_uploaded_file($_FILES['profile_pic']['tmp_name'],"uploads/".$filename);

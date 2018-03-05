@@ -1,12 +1,7 @@
 <?php
 session_start();
-if(isset($_SESSION['username'])&&$_SESSION['username']!=""){
+include("logincheck.php");
 ?>
-<a href="logout.php">Logout</a>
+<?php include("header.php"); ?>
+<?php include("nav.php"); ?>
 <h2>Welcome to my site <?php echo $_SESSION['username']; ?></h2>
-<?php
-}
-else{
-    header("Location:sessions.php");
-}
-?>

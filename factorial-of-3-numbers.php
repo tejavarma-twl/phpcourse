@@ -12,6 +12,7 @@ function findfactorial($num)
     }
     return $fact;
 }
+
 function findcommonfactorial($num1,$num2,$num3)
 {
     $factor1 = findfactorial($num1);

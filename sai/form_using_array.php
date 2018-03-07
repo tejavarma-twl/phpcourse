@@ -19,7 +19,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 <body>
 <h1 class="popover-title" style="text-align:center;"> Please fill the below details to see the output </h1>
 <div class="container">
-  <form method="post"   enctype="multipart/form-data">
+  <form method="post"  enctype="multipart/form-data" >
     <div class="row">
     <div class="col-sm-6"> 
       <!--comment-->

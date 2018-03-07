@@ -30,6 +30,9 @@ $schoolpercentage = $_POST['schoolpercentage'];
 $schoolboard = $_POST['schoolboard'];
 $schoolpassout = $_POST['schoolpassout'];
 
+$profile_pic= $_POST['profile_pic'];
+ $filename = "sample.jpg";
+
 $ak1 = $_POST['ak1'];
 $ak2 = $_POST['ak2'];
 $ak3 = $_POST['ak3'];
@@ -42,7 +45,6 @@ $hobbies1 = $_POST['hobbies1'];
 $hobbies2 = $_POST['hobbies2'];
 $hobbies3 = $_POST['hobbies3'];
 
-move_uploaded_file($_FILES['profile_pic']['tmp_name'],"./uploads/sample.jpg");
 ?>
 
 <!doctype html>

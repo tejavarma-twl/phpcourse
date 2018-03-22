@@ -4,6 +4,7 @@ session_start();
 include("header.php");
 ?>
 <body>
+
      <!--Start service section-->
     <section class="service-area bgcolor1 section-padding" id="service">
         <div class="container">

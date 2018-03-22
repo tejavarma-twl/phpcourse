@@ -1,0 +1,13 @@
+@charset "utf-8";
+/* CSS Document */
+.clearfix{
+	clear:both;
+	}
+	.title-div{
+		margin-top:20px;
+		margin-bottom:20px;
+		}
+		.container{
+			text-align:justify;
+			}
+

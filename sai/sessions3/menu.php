@@ -1,16 +1,10 @@
 <?php 
+
 ob_start();
 session_start();
 
-
-// print_r($_SESSION);
-include("header.php"); ?>
-<?php include("config.php"); 
-
-login($_POST);
-
-error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-?>
+include("header.php"); 
+include("config.php"); ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
   <div class="container"><a class="navbar-brand" href="index.php"><img src="logo.png" width="150" height="30" alt=""></a>
@@ -23,31 +17,37 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
         <?php
 		if(isset($_SESSION['username']) && isset($_SESSION['password']) )
 			{
-					if($_SESSION['username']!="" && $_SESSION['password']!="")
-					{
-										?>
-						<li class="nav-item"><a class="nav-link" href="logout.php">Log Out</a></li>
-						<li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-						<?php
+				if($_SESSION['username']!="" && $_SESSION['password']!="")
+				{   
+								?>
+        			<li class="nav-item"><a class="nav-link" href="logout.php">Log Out</a></li>
+        							<?php
 					}	
-					else
-						{	
-						}		
-			}	
+				else
+				{
+					
+				}
+		}	
 		else
-			{
+		{
 									?>
         <li class="nav-item"><a class="nav-link" href="login.php">Log In</a></li>
-        <?php
-			}
+        						<?php
+		}
 								
-       
+        if(isset($_SESSION['username']) && isset($_SESSION['password']) )
+		{
+			if($_SESSION['username']=="" && $_SESSION['password']=="")
+			{
+			 						?>
+        <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+        <?php
+				
+			}	
+		}	
        								 ?>
-        
-        <!-- <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>-->
       </ul>
     </div>
   </div>
   <div class="clearfix"></div>
 </nav>
-<div class="clearfix"></div>

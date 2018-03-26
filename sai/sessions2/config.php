@@ -8,7 +8,8 @@ function login($details)
         $password = $details['password'];
         if($username!=""&&$password!="")
 		{
-            $_SESSION['username'] = $username;   
+            $_SESSION['username'] = $username; 
+            $_SESSION['password'] = $password;   
             header("Location:dashboard.php");
         }
     }

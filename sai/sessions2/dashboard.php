@@ -1,9 +1,24 @@
 
 <?php
-ob_start();
-session_start();
 
- include("menu.php"); ?>
+
+ include("menu.php"); 
+ if(isset($_SESSION['username']) && isset($_SESSION['password']) )
+		{
+			if($_SESSION['username']!="" && $_SESSION['password']!="")
+			{
+			 					
+				
+			}	
+    }	
+    else{
+      header("Location:login.php");
+    }
+ 
+ 
+ ?>
+
+ 
 <div class="container">
   <div class="title-div">
     <h2 class="text-center">Dashboard</h2>

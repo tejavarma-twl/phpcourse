@@ -1,0 +1,108 @@
+<?php
+$link = mysqli_connect("127.0.0.1", "root", "", "phpDB");
+
+if (!$link) {
+    echo "Error: Unable to connect to MySQL." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
+$students = array();
+
+if(isset($_POST['name'])&&isset($_POST['city'])){
+    $name = $_POST['name'];
+    $city = $_POST['city'];
+    if(mysqli_query($link,"insert into `sampletable` (`id`,`name`,`city`) values(NULL, '$name' , '$city')")){
+        header("Location:database.php?status=success");
+    }
+}
+if ($result = mysqli_query($link, "select * from sampletable")) 
+	{
+		while($row = mysqli_fetch_assoc($result))
+			{
+				array_push($students,$row); 
+			}
+	mysqli_free_result($result);
+	}
+//DELETE FROM `sampletable` WHERE `sampletable`.`id` = **
+//if(mysqli_query($link,"delete from `sampletable` where `id`= ")){
+//		header("Location:database.php?status=deleted");
+//		}
+
+mysqli_close($link);
+?>
+<html >
+<head>
+<title>Database</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <form method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="text" class="form-control"  placeholder="Enter Name" name="name" required>
+      </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">City</label>
+          <input type="text" class="form-control" placeholder="City" name="city" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  <div class="my-5"</div>
+<?php
+    if(isset($_GET['status']))
+	{
+        if($_GET['status']=="success")
+		{
+?>
+<div class="alert alert-dark" role="alert"> Inserted Successfully </div>
+<a href="database.php">Go Back</a>
+<?php
+        }
+    }
+    ?>
+<?php
+		if(isset($_GET['deleted']))
+			{
+				if($_GET['status']=="deleted")
+					{
+?>
+<div class="alert alert-danger" role="alert"> Deleted Successfully </div>
+<?php
+					}
+			}
+    ?>
+<div class="my-10"</div>
+
+<table class="table ">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">City</th>
+      <th scope="col">Select</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+        foreach($students as $student){
+            ?>
+    <tr>
+      <th scope="row"><?php echo $student['id']; ?></th>
+      <td><?php echo $student['name']; ?></td>
+      <td><?php echo $student['city']; ?></td>
+      <td><button type="button" class="btn btn-danger">Delete</button></td>
+    </tr>
+    <?php
+        }
+    ?>
+  </tbody>
+</table>
+</div>
+</body>
+</html>
+
+
+<!--db name= phpDB
+table name = sampletable-->

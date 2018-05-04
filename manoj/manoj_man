@@ -1,0 +1,164 @@
+<?php
+$link = mysqli_connect("127.0.0.1", "root", "", "library"); // man name
+
+if (!$link) {
+    echo "Error: Unable to connect to MySQL." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
+$students = [];
+
+
+if(isset($_POST['name'])&&isset($_POST['age'])){
+    $name = $_POST['name'];
+    $age = $_POST['age'];
+    if(isset($_POST['insert'])){
+        if(mysqli_query($link,"insert into `studennt` (`id`,`name`,`age`) values(NULL, '$name' , '$age')")){
+           
+            header("Location:man.php?status=success");
+        }
+    }else{
+        $upid = $_POST['id'];
+        if(mysqli_query($link,"UPDATE `studennt` SET `name`='$name', `age`='$age' WHERE `id`='$upid'")){
+          
+            header("Location:man.php?status=upsuccess");
+        }
+    }
+    
+}
+
+if(isset($_GET['id'])){
+    if($_GET['operation']=="delete"){
+        if(mysqli_query($link,"DELETE FROM `studennt` WHERE `id`=".$_GET['id']."")){
+            header("Location:man.php?status=delsuccess");
+        } 
+    }
+}
+
+if ($result = mysqli_query($link, "select * from studennt")) {
+    
+    while($row = mysqli_fetch_assoc($result)){
+       
+        array_push($students,$row);
+       
+    }
+    
+    mysqli_free_result($result);
+}
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+<?php
+    if(isset($_GET['id'])){
+        if($_GET['operation']=="edit"){
+            if($result2 = mysqli_query($link, "select * from studennt where `id`=".$_GET['id'])) {
+                $data = mysqli_fetch_assoc($result2);
+            ?>
+            <form method="post">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" class="form-control" placeholder="Enter Name" name="name" value="<?php echo $data['name']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">age</label>
+                <input type="text" class="form-control" placeholder="age" name="age" value="<?php echo $data['age']; ?>">
+                <input type="hidden" class="form-control" placeholder="age" name="id" value="<?php echo $data['id']; ?>">
+            </div>
+            <button type="submit" class="btn btn-primary" name="update">Submit</button>
+        </form>
+            <?php
+            }
+        }
+    }else{
+        ?>
+        <form method="post">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" class="form-control" placeholder="Enter Name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">age</label>
+                <input type="text" class="form-control" placeholder="age" name="age">
+            </div>
+            <button type="submit" class="btn btn-primary" name="insert">Submit</button>
+        </form>
+        <?php
+    }
+?>
+    <div class="my-5"</div>
+    <?php
+    if(isset($_GET['status'])){
+        if($_GET['status']=="success"){
+            ?>
+            <div class="alert alert-success" role="alert">
+                Row inserted Successfully!
+            </div>
+            <a href="man.php">Go Back</a>
+            <?php
+        }
+        if($_GET['status']=="delsuccess"){
+            ?>
+            <div class="alert alert-danger" role="alert">
+                Deleted Successfully!
+            </div>
+            <a href="man.php">Go Back</a>
+            <?php
+        }
+        if($_GET['status']=="upsuccess"){
+            ?>
+            <div class="alert alert-danger" role="alert">
+                Updated Successfully!
+            </div>
+            <a href="man.php">Go Back</a>
+            <?php
+        }
+    }
+    ?>
+    <div class="my-5"</div>
+    <table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">age</th>
+        <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+        $number=1;
+        foreach($students as $studennt){
+            ?>
+            <tr>
+                <th scope="row"><?php echo $i; //$studennt['id']; ?></th>
+                <td><?php echo $studennt['name']; ?></td>
+                <td><?php echo $studennt['age']; ?></td>
+                <td>
+                    <a class="btn btn-danger" href="man.php?id=<?php echo $studennt['id']; ?>&operation=delete">Delete</a>
+                    <a class="btn btn-danger" href="man.php?id=<?php echo $studennt['id']; ?>&operation=edit">Edit</a>
+                </td>
+            </tr>
+            <?php
+            $number++;
+        }
+    ?>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>
+<?php
+mysqli_close($link);
+?>

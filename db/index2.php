@@ -1,7 +1,7 @@
 <?php
-ob_start();
-$link = mysqli_connect("127.0.0.1", "root", "admin", "phpcourse"); 
+$link = mysqli_connect("127.0.0.1", "root", "admin", "phpcourse"); //localhost
 define ('SITE_ROOT', realpath(dirname(__FILE__)));
+
 if (!$link) {
     echo "Error: Unable to connect to MySQL." . PHP_EOL;
     echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
@@ -11,50 +11,39 @@ if (!$link) {
 $students = [];
 // echo "Success: A proper connection to MySQL was made! The my_db database is great." . PHP_EOL;
 // echo "Host information: " . mysqli_get_host_info($link) . PHP_EOL;
+
 if(isset($_POST['name'])&&isset($_POST['city'])){
     $name = $_POST['name'];
     $city = $_POST['city'];
     if(isset($_POST['insert'])){
         if(mysqli_query($link,"insert into `sample` (`id`,`name`,`city`) values(NULL, '$name' , '$city')")){
+            // echo "success";
+            // $uploads_dir = SITE_ROOT.'/uploads';
             $uploads_dir = './uploads';
             $userid = mysqli_insert_id($link);
             $ext = end(explode(".",$_FILES['profile']['name']));
+            // print_r($ext);
             $imagename = "./uploads/".$userid.".".$ext;
+            // move_uploaded_file($_FILES['profile']['tmp_name'],"$uploads_dir/$userid.$ext");
             move_uploaded_file($_FILES['profile']['tmp_name'],$imagename);
-
-
-            $phone = $_POST['phone'];
-            $address = $_POST['address'];
-
-            mysqli_query($link,"insert into `contact` (`id`,`contact_no`,`contact_address`,`user_id`) values(NULL, '$phone' , '$address', '$userid')");
-
+           
+            // "/uploads/".$userid.".".$ext);
+            // header("Location:index.php?status=success");
             if(mysqli_query($link,"UPDATE `sample` SET `profile`='$imagename' WHERE `id`='$userid'")){
+                // echo "success";
                 header("Location:index.php?status=success");
-                exit;
             }
+           // exit;
         }
     }else{
         $upid = $_POST['id'];
-        if(isset($_FILES['profile']['name'])&&$_FILES['profile']['name']!=''){
-            $uploads_dir = './uploads';
-            $ext = end(explode(".",$_FILES['profile']['name']));
-            $imagename = "./uploads/".$upid.".".$ext;
-            move_uploaded_file($_FILES['profile']['tmp_name'],$imagename);
-
-            if(mysqli_query($link,"UPDATE `sample` SET `name`='$name', `city`='$city', `profile`= '$imagename' WHERE `id`='$upid'")){
-                header("Location:index.php?status=upsuccess");
-                exit;
-            }
-        }else{
-            if(mysqli_query($link,"UPDATE `sample` SET `name`='$name', `city`='$city' WHERE `id`='$upid'")){
-                // echo "success";
-                header("Location:index.php?status=upsuccess");
-                exit;
-            }
+        if(mysqli_query($link,"UPDATE `sample` SET `name`='$name', `city`='$city' WHERE `id`='$upid'")){
+            // echo "success";
+            header("Location:index.php?status=upsuccess");
         }
     }
+    
 }
-
 
 if(isset($_GET['id'])){
     if($_GET['operation']=="delete"){
@@ -63,7 +52,6 @@ if(isset($_GET['id'])){
         } 
     }
 }
-
 
 if ($result = mysqli_query($link, "select * from sample")) {
     // printf("Select returned %d rows.\n", mysqli_num_rows($result));
@@ -79,6 +67,8 @@ if ($result = mysqli_query($link, "select * from sample")) {
     /* free result set */
     mysqli_free_result($result);
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,20 +87,15 @@ if ($result = mysqli_query($link, "select * from sample")) {
             if($result2 = mysqli_query($link, "select * from sample where `id`=".$_GET['id'])) {
                 $data = mysqli_fetch_assoc($result2);
             ?>
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
             <div class="form-group">
                 <label for="exampleInputEmail1">Name</label>
-            <input type="text" class="form-control" placeholder="Enter Name" name="name" value="<?php echo $data['name'];?>">
+                <input type="text" class="form-control" placeholder="Enter Name" name="name" value="<?php echo $data['name']; ?>">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">City</label>
                 <input type="text" class="form-control" placeholder="City" name="city" value="<?php echo $data['city']; ?>">
                 <input type="hidden" class="form-control" placeholder="City" name="id" value="<?php echo $data['id']; ?>">
-            </div>
-            <div class="form-group">
-                <img src="<?php echo $data['profile']; ?>" alt="" height="100">
-                <label for="profile picture">Profile Picture</label>
-                <input type="file" class="form-control" name="profile">
             </div>
             <button type="submit" class="btn btn-primary" name="update">Submit</button>
         </form>
@@ -129,15 +114,7 @@ if ($result = mysqli_query($link, "select * from sample")) {
                 <input type="text" class="form-control" placeholder="City" name="city">
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1">Phone</label>
-                <input type="text" class="form-control" placeholder="phone" name="phone">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Address</label>
-                <input type="text" class="form-control" placeholder="address" name="address">
-            </div>
-            <div class="form-group">
-                <label for="profile picture">Profile Picture</label>
+                <label for="exampleInputPassword1">Profile Picture</label>
                 <input type="file" class="form-control" name="profile">
             </div>
             <button type="submit" class="btn btn-primary" name="insert">Submit</button>
@@ -181,8 +158,6 @@ if ($result = mysqli_query($link, "select * from sample")) {
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">City</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Address</th>
         <th scope="col">image</th>
         <th scope="col">Options</th>
         </tr>
@@ -191,17 +166,11 @@ if ($result = mysqli_query($link, "select * from sample")) {
     <?php
         $i=1;
         foreach($students as $student){
-            $tempId = $student['id'];
-            $getContact = mysqli_query($link,"select * from `contact` where `user_id`=$tempId");
-            $contactDetails = mysqli_fetch_assoc($getContact);
-            // print_r($contactDetails);
             ?>
             <tr>
                 <th scope="row"><?php echo $i; //$student['id']; ?></th>
                 <td><?php echo $student['name']; ?></td>
                 <td><?php echo $student['city']; ?></td>
-                <td><?php echo $contactDetails['contact_no']; ?></td>
-                <td><?php echo $contactDetails['contact_address']; ?></td>
                 <td><img src="<?php echo $student['profile']; ?>" alt="" height="100"></td>
                 <td>
                     <a class="btn btn-danger" href="index.php?id=<?php echo $student['id']; ?>&operation=delete">Delete</a>
